@@ -118,10 +118,10 @@ function main() {
         if (nowTime - createTime <= 300000) {
           // 投稿情報にクラス名を追加
           postInfo['className'] = className;
-          // 一時間以内***送信用リストに投稿を追加
+          // 5分以内***送信用リストに投稿を追加
           sendArr.push(postInfo);
         } else {
-          // 一時間以上***特になし
+          // 5分以上***特になし
         }
       }
     }
