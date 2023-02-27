@@ -47,12 +47,8 @@ function send(arr) {
     var timeMin = ('00' + timeMin).slice(-2);
     var userId = target['creatorUserId']; // 投稿者ID
     // 投稿者IDから名前を指定
-    switch (userId) {
-      case 'USER_ID': // ユーザーIDを入力
-        var userName = 'USER_NAME'; // ユーザー名を入力
-      default:
-        var userName = '未設定のユーザー';
-    }
+    var creatorProfile = Classroom.UserProfiles.get(userId);
+    var userName = creatorProfile.name.fullName;
 
     // Discordへの送信プログラム
     var WEBHOOK_URL = 'DISCORD_WEBHOOK_URL'; // Discord webhook urlを入力
