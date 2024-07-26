@@ -9,6 +9,8 @@ function getClasses() {
     var childArr = { 'className': response[i]['name'], 'classId': response[i]['id'] };
     classesList.push(childArr);
   }
+  // Logger.log("getClasses: Classes List");
+  // Logger.log(classesList);
   return classesList;
 }
 
@@ -16,15 +18,11 @@ function getClasses() {
 // 引数にはクラスIDを入れる
 function getClassPost(classId) {
   var posts = Classroom.Courses.Announcements.list(classId)['announcements'];
+  // Logger.log("getClassPost: classID");
+  // Logger.log(classId);
+  // Logger.log("getClassPost: posts")
+  // Logger.log(posts);
   return posts;
-}
-
-// 一つ一つの投稿情報を取得
-// 第一引数にはクラスIDを、第二引数には指定したクラス内の最新から何番目の投稿情報が欲しいかを入力
-function getPostInfo(classId, num) {
-  var posts = getClassPost(classId);
-  var postInfo = posts[num];
-  return postInfo;
 }
 
 // 送信プログラム
@@ -80,25 +78,26 @@ function send(arr) {
 function main() {
   // 実際にbotで送信される投稿リストを定義
   var sendArr = [];
-
+  var classesList = getClasses();
   // 存在するクラスの数だけ繰り返す
-  for (var i = 0; i <= getClasses().length - 1; i++) {
-    var classId = getClasses()[i]['classId']; // クラスID
-    var className = getClasses()[i]['className']; // クラス名
+  for (var i = 0; i <= classesList.length - 1; i++) {
+    var classId = classesList[i]['classId']; // クラスID
+    var className = classesList[i]['className']; // クラス名
 
     // 最大適応投稿数を定義
-    if (getClassPost(classId) == undefined) {
+    var posts = getClassPost(classId);
+    if (posts == undefined) {
       var maxPost = 0;
-    } else if (getClassPost(classId).length >= 5) {
+    } else if (posts.length >= 5) {
       var maxPost = 5;
     } else {
-      var maxPost = getClassPost(classId).length;
+      var maxPost = posts.length;
     }
 
     if (maxPost != 0) { // 投稿が0の場合は除外
       // maxPost分の投稿が条件を満たしているかチェック
       for (var n = 0; n <= maxPost - 1; n++) {
-        var postInfo = getPostInfo(classId, n);
+        var postInfo = posts[n];
 
         // 投稿時刻の取得&変換
         var createTime = postInfo['creationTime'];
